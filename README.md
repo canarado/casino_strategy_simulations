@@ -1,6 +1,10 @@
 # Casino Simulations Project
 This is just a small project to attempt to determine optimal strategies to win "luck" based games such as spin-the-wheel games, coinflips, and dice rolls. Specifically made to get lots of coins on the AMC discord.
 
+To run this project, you will need:
+node.js - v16+
+Beginner javascript knowledge
+
 ## Usage
 ```
 git clone https://github.com/canarado/casino_strategy_simulations

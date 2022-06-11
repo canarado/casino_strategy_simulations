@@ -20,12 +20,13 @@ class BetRollSim extends Simulator {
         this.update(initialValues, (i, j, values, data) => {
             // provide current current supply, data of the last bet, and if this is first round
             // the strategy should return an object with a betAmount key determined by the aforemention values
-            let strategyData = BetRollStrategy(values.currentSim, data[i][j] ?? {}, j == 0);
-
-            console.log(strategyData)
+            let strategyData = BetRollStrategy(values.currentSim, data[i + 1]?.[j] ?? {}, j == 0);
+            strategyData.betAmount = Math.floor(strategyData.betAmount);
 
             // if the current supply of currency is less than the bet, end the round
             if(values.currentSim < strategyData.betAmount) return 'break';
+
+            values.currentSim -= strategyData.betAmount;
 
             // instantiate prize
             let prize;
@@ -44,10 +45,10 @@ class BetRollSim extends Simulator {
                 prize = strategyData.betAmount * Multipliers[0];
             }
 
-            // set the new amount of curreny available based on the bet's result
+            // set the new amount of currency available based on the bet's result
             let newCurrent = values.currentSim + prize;
 
-            // decide is the current supply is greater than the last round's record
+            // decide if the current supply is greater than the last round's record
             let greater = newCurrent > values.currentSim ? newCurrent : values.currentSim;
             if(greater > values.record) values.record = greater;
 
@@ -61,7 +62,8 @@ class BetRollSim extends Simulator {
                 endedWith: newCurrent,
                 record: values.record,
                 won: prize > strategyData.betAmount,
-                betAmount: strategyData.betAmount
+                betAmount: strategyData.betAmount,
+                roll
             }
         });
     }
@@ -72,13 +74,3 @@ class BetRollSim extends Simulator {
 }
 
 module.exports = BetRollSim;
-
-function BetRollStrategy(current, lastbet) {
-    let exampleBetAmount = 5_000;
-
-    if(!lastbet.amount || lastbet.won == null) return { betAmount: exampleBetAmount };
-
-    return {
-        betAmount: lastbet.won ? exampleBetAmount : lastbet.amount * 2,
-    }
-}

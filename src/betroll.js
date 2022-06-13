@@ -57,7 +57,7 @@ class BetRollSim extends Simulator {
 
             // assign values to data[i + 1][j + 1] aka the current round of the current sim
             data[i + 1][j + 1] = {
-                startedWith: values.currentSim + strategyData.betAmount,
+                startedWith: data[i + 1]?.[j]?.endedWith ?? values.currentSim,
                 prize,
                 endedWith: newCurrent,
                 record: values.record,
